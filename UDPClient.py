@@ -8,21 +8,29 @@ clientPort = 1234
 clientSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 clientSocket.bind((cleintIP, clientPort))
 
-print("\n[*] Starting Chat with client code...%s:%d" % (cleintIP,clientPort))
-print("The chat is ready.\n\n")
+print("Hello and welcome to a simple UDP chat box\n"  )
 
-#os.system("tput setaf 2")
 name = input("Enter Your name: ")
 if(name == "QUIT"):
     os._exit(1)
+print("Waiting........")
 
-print("Type *QUIT* to exit the program. \n\n")
 
+#Sending name to the other person
+sname = "{}".format(name)
+clientSocket.sendto(sname.encode(),("127.0.0.1",4321))
+
+#Reciving name fomr 
+inName = clientSocket.recvfrom(2048)
+print("\nStarting Chat with: "  + inName[0].decode()) 
+
+
+print("\tType *QUIT* to exit the program at any time.\n")
+print("===================================================\n")
 
 def send():
     while True:
-        
-        outMess = input()
+        outMess =  input()
         if (outMess == "QUIT"):
             os._exit(1)
 
@@ -33,7 +41,7 @@ def send():
 def receive():
     while True: 
         inMess = clientSocket.recvfrom(2048)
-        print("\t\t\t\t" + inMess[0].decode()) 
+        print("\t\t\t" + inMess[0].decode()) 
 
 #creating threads 
 T1 = threading.Thread(target=send)
